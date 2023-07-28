@@ -35,8 +35,9 @@ func UnaryServerInterceptor(logger *zap.Logger, opts ...Option) grpc.UnaryServer
 		code := o.codeFunc(err)
 		level := o.levelFunc(code)
 		duration := o.durationFunc(time.Since(startTime))
-
-		o.messageFunc(newCtx, "finished unary call with code "+code.String(), level, code, err, duration)
+                if ctx.Err() == nil {
+			o.messageFunc(newCtx, "finished unary call with code "+code.String(), level, code, err, duration)
+		}
 		return resp, err
 	}
 }
